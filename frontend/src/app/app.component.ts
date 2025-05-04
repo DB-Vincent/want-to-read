@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { ApiService } from './services/api.service';
+import { Book } from '../types/book';
 
 @Component({
   selector: 'app-root',
@@ -11,26 +12,25 @@ import { ApiService } from './services/api.service';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-  healthStatus: string = 'Checking...';
-  isHealthy: boolean = false;
+  books: Book[] = [];
+  booksLoading: boolean = true;
 
   constructor(private apiService: ApiService) {}
 
   ngOnInit() {
-    this.checkHealth();
+    this.listBooks();
   }
 
-  private checkHealth() {
-    this.apiService.checkHealth().subscribe({
+  private listBooks() {
+    this.apiService.listBooks().subscribe({
       next: (response) => {
-        this.healthStatus = response.status;
-        this.isHealthy = response.status === 'ok';
+        this.books = response;
+        this.booksLoading = false;
       },
-      error: (error) => {
-        this.healthStatus = 'Error connecting to backend';
-        this.isHealthy = false;
-        console.error('Health check failed:', error);
+      error: () => {
+        this.books = [];
+        this.booksLoading = false;
       }
-    });
+    })
   }
 }
