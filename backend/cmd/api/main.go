@@ -14,11 +14,11 @@ import (
 	_ "github.com/DB-Vincent/want-to-read/docs"
 )
 
-// @title           Want to Read API
-// @version         1.0
-// @description     API for managing your reading list
-// @host            localhost:8080
-// @BasePath        /
+//	@title			Want to Read API
+//	@version		1.0
+//	@description	API for managing your reading list
+//	@host			localhost:8080
+//	@BasePath		/
 
 func main() {
 	r := gin.Default()

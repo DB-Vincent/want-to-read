@@ -18,12 +18,12 @@ func NewHealthHandler(healthService *services.HealthService) *HealthHandler {
 }
 
 // Check handles GET /health requests
-// @Summary     Health check endpoint
-// @Description Get the health status of the API
-// @Tags        health
-// @Produce     json
-// @Success     200 {object} models.Health
-// @Router      /health [get]
+//	@Summary		Health check endpoint
+//	@Description	Get the health status of the API
+//	@Tags			health
+//	@Produce		json
+//	@Success		200	{object}	models.Health
+//	@Router			/health [get]
 func (h *HealthHandler) Check(w http.ResponseWriter, r *http.Request) {
 	health := h.healthService.CheckHealth()
 

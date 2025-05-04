@@ -18,13 +18,13 @@ func NewBookHandler(bookService *services.BookService) *BookHandler {
 	}
 }
 
-// @Summary     List all books
-// @Description Get a list of all books in the system
-// @Tags        books
-// @Produce     json
-// @Success     200 {array}  models.Book
-// @Failure     500 {string} string
-// @Router      /books [get]
+//	@Summary		List all books
+//	@Description	Get a list of all books in the system
+//	@Tags			books
+//	@Produce		json
+//	@Success		200	{array}		models.Book
+//	@Failure		500	{string}	string
+//	@Router			/books [get]
 func (h *BookHandler) ListBooks(w http.ResponseWriter, r *http.Request) {
 	books, err := h.bookService.ListBooks()
 	if err != nil {
@@ -39,14 +39,14 @@ func (h *BookHandler) ListBooks(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// @Summary     Add book
-// @Description Add a book into the database
-// @Tags        books
-// @Produce     json
-// @Param		book body object true "Book to add"
-// @Success     200 {object}  models.Book
-// @Failure     500 {string} string
-// @Router      /book [post]
+//	@Summary		Add book
+//	@Description	Add a book into the database
+//	@Tags			books
+//	@Produce		json
+//	@Param			book	body		object	true	"Book to add"
+//	@Success		200		{object}	models.Book
+//	@Failure		500		{string}	string
+//	@Router			/book [post]
 func (h *BookHandler) AddBook(w http.ResponseWriter, r *http.Request) {
 	var book models.Book
 	if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
