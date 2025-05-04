@@ -3,7 +3,9 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
+	"github.com/gin-gonic/gin"
 	"github.com/DB-Vincent/want-to-read/internal/services"
 	"github.com/DB-Vincent/want-to-read/internal/models"
 )
@@ -65,4 +67,41 @@ func (h *BookHandler) AddBook(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
 		return
 	}
+}
+
+//	@Summary		Update book
+//	@Description	Updates a book based on the given ID
+//	@Tags			books
+//	@Produce		json
+//	@Param			id		path		int		true	"ID of book"
+//	@Param			book	body		object	true	"Adjusted book object"
+//	@Success		200		{object}	models.Book
+//	@Failure		500		{string}	string
+//	@Router			/book/{id} [patch]
+func (h *BookHandler) UpdateBook(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Invalid book ID",
+		})
+		return
+	}
+
+	var book models.Book
+	if err := c.ShouldBindJSON(&book); err != nil {
+		c.JSON(400, gin.H{
+			"error": "Invalid request body",
+		})
+		return
+	}
+
+	updatedBook, err := h.bookService.UpdateBook(id, &book)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": "Failed to update book",
+		})
+		return
+	}
+
+	c.JSON(200, updatedBook)
 }

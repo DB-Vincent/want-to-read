@@ -39,6 +39,7 @@ func main() {
 
 	// Initialize handlers
 	healthHandler := handlers.NewHealthHandler(healthService)
+	bookHandler := handlers.NewBookHandler(bookService)
 
 	// Health check endpoint
 	r.GET("/health", func(c *gin.Context) {
@@ -74,6 +75,7 @@ func main() {
 		}
 		c.JSON(200, createdBook)
 	})
+	r.PATCH("/book/:id", bookHandler.UpdateBook)
 
 	// Swagger documentation endpoint
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

@@ -52,6 +52,50 @@ const docTemplate = `{
                 }
             }
         },
+        "/book/{id}": {
+            "patch": {
+                "description": "Updates a book based on the given ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "books"
+                ],
+                "summary": "Update book",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of book",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Adjusted book object",
+                        "name": "book",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Book"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/books": {
             "get": {
                 "description": "Get a list of all books in the system",

@@ -51,6 +51,35 @@ paths:
       summary: Add book
       tags:
       - books
+  /book/{id}:
+    patch:
+      description: Updates a book based on the given ID
+      parameters:
+      - description: ID of book
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Adjusted book object
+        in: body
+        name: book
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Book'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update book
+      tags:
+      - books
   /books:
     get:
       description: Get a list of all books in the system
