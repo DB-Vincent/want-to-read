@@ -76,6 +76,7 @@ func main() {
 		c.JSON(200, createdBook)
 	})
 	r.PATCH("/book/:id", bookHandler.UpdateBook)
+	r.DELETE("/book/:id", bookHandler.DeleteBook)
 
 	// Swagger documentation endpoint
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

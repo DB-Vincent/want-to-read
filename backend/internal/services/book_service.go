@@ -42,3 +42,16 @@ func (s *BookService) UpdateBook(id int, book *models.Book) (*models.Book, error
 
 	return &existingBook, nil
 }
+
+func (s *BookService) DeleteBook(id int) (int, error) {
+	var existingBook models.Book
+	if err := database.DB.First(&existingBook, id).Error; err != nil {
+		return 0, err
+	}
+
+	if err := database.DB.Delete(&existingBook).Error; err != nil {
+		return 0, err
+	}
+
+	return id, nil	
+}

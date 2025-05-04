@@ -52,6 +52,28 @@ paths:
       tags:
       - books
   /book/{id}:
+    delete:
+      description: Deletes a book based on the given ID
+      parameters:
+      - description: ID of book
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete book
+      tags:
+      - books
     patch:
       description: Updates a book based on the given ID
       parameters:

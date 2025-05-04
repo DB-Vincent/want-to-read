@@ -105,3 +105,31 @@ func (h *BookHandler) UpdateBook(c *gin.Context) {
 
 	c.JSON(200, updatedBook)
 }
+
+//	@Summary		Delete book
+//	@Description	Deletes a book based on the given ID
+//	@Tags			books
+//	@Produce		json
+//	@Param			id		path		int		true	"ID of book"
+//	@Success		200		{string}	string
+//	@Failure		500		{string}	string
+//	@Router			/book/{id} [delete]
+func (h *BookHandler) DeleteBook(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Invalid book ID",
+		})
+		return
+	}
+
+	deletedBook, err := h.bookService.DeleteBook(id)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": "Failed to delete book",
+		})
+		return
+	}
+
+	c.JSON(200, deletedBook)
+}
