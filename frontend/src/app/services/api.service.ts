@@ -20,7 +20,7 @@ export class ApiService {
   }
 
   markBookAsRead(book: Book): Observable<Book> {
-    return this.http.patch<Book>(`${this.apiUrl}/book/${book.id}`, { completed: "true" })
+    return this.http.patch<Book>(`${this.apiUrl}/book/${book.id}`, { completed: !book.completed })
   }
 
   deleteBook(id: Number): Observable<string> {
