@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { ApiService } from './services/api.service';
 import { Book } from '../types/book';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { BookListComponent } from './components/book-list/book-list.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule, RouterModule, NavbarComponent, BookListComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -32,5 +34,13 @@ export class AppComponent implements OnInit {
         this.booksLoading = false;
       }
     })
+  }
+
+  onDeleteBook(book: Book) {
+    console.log("Deleting", book.title)
+  }
+
+  onMarkAsRead(book: Book) {
+    console.log("Marking", book.title)
   }
 }
