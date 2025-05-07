@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/DB-Vincent/want-to-read/internal/services"
 	"github.com/DB-Vincent/want-to-read/internal/models"
+	"github.com/DB-Vincent/want-to-read/internal/database"
 )
 
 type BookHandler struct {
@@ -87,23 +88,33 @@ func (h *BookHandler) UpdateBook(c *gin.Context) {
 		return
 	}
 
-	var book models.Book
-	if err := c.ShouldBindJSON(&book); err != nil {
+	// Get the existing book first
+	var existingBook models.Book
+	if err := database.DB.First(&existingBook, id).Error; err != nil {
+		c.JSON(404, gin.H{
+			"error": "Book not found",
+		})
+		return
+	}
+
+	// Parse the update request
+	var updateData map[string]interface{}
+	if err := c.ShouldBindJSON(&updateData); err != nil {
 		c.JSON(400, gin.H{
 			"error": "Invalid request body",
 		})
 		return
 	}
 
-	updatedBook, err := h.bookService.UpdateBook(id, &book)
-	if err != nil {
+	// Update only the fields that were provided
+	if err := database.DB.Model(&existingBook).Updates(updateData).Error; err != nil {
 		c.JSON(500, gin.H{
 			"error": "Failed to update book",
 		})
 		return
 	}
 
-	c.JSON(200, updatedBook)
+	c.JSON(200, existingBook)
 }
 
 //	@Summary		Delete book

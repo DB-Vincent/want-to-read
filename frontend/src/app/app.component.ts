@@ -38,9 +38,25 @@ export class AppComponent implements OnInit {
 
   onDeleteBook(book: Book) {
     console.log("Deleting", book.title)
+    this.apiService.deleteBook(book.id).subscribe({
+      next: () => {
+        this.listBooks();
+      },
+      error: (err) => {
+        console.error('Failed to delete book:', err);
+      }
+    });
   }
 
   onMarkAsRead(book: Book) {
     console.log("Marking", book.title)
+    this.apiService.markBookAsRead(book).subscribe({
+      next: () => {
+        this.listBooks();
+      },
+      error: (err) => {
+        console.error('Failed to mark book as read:', err);
+      }
+    });
   }
 }

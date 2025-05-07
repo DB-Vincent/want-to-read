@@ -14,4 +14,12 @@ export class ApiService {
   listBooks(): Observable<Book[]> {
     return this.http.get<Book[]>(`${this.apiUrl}/books`)
   }
+
+  markBookAsRead(book: Book): Observable<Book> {
+    return this.http.patch<Book>(`${this.apiUrl}/book/${book.id}`, { completed: "true" })
+  }
+
+  deleteBook(id: Number): Observable<string> {
+    return this.http.delete<string>(`${this.apiUrl}/book/${id}`)
+  }
 } 

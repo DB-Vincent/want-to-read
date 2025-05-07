@@ -10,11 +10,11 @@
         </thead>
         <tbody>
             <tr *ngFor="let book of books">
-                <th>{{ book.id }}</th>
-                <td>{{ book.title }}</td>
-                <td>{{ book.author }}</td>
+                <th [ngClass]="{'line-through': book.completed === true}">{{ book.id }}</th>
+                <td [ngClass]="{'line-through': book.completed === true}">{{ book.title }}</td>
+                <td [ngClass]="{'line-through': book.completed === true}">{{ book.author }}</td>
                 <th class="flex flex-row gap-3 justify-end-safe">
-                    <button class="btn btn-square" (click)="onDelete(book)">
+                    <button [disabled]="book.completed" class="btn btn-square" (click)="onDelete(book)">
                         <svg xmlns="http://www.w2.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-trash" viewBox="-1 0 16 16">
                             <path
@@ -23,7 +23,7 @@
                                 d="M13.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
                         </svg>
                     </button>
-                    <button class="btn btn-square" (click)="onMarkAsRead(book)">
+                    <button [disabled]="book.completed" class="btn btn-square" (click)="onMarkAsRead(book)">
                         <svg xmlns="http://www.w2.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-check-lg" viewBox="-1 0 16 16">
                             <path
