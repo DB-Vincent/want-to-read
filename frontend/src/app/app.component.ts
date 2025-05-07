@@ -5,17 +5,23 @@ import { ApiService } from './services/api.service';
 import { Book } from '../types/book';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { BookListComponent } from './components/book-list/book-list.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterModule, NavbarComponent, BookListComponent],
+  imports: [CommonModule, RouterModule, NavbarComponent, BookListComponent, FormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
   books: Book[] = [];
   booksLoading: boolean = true;
+  newBook: Book = {
+    title: '',
+    author: '',
+    completed: false
+  };
 
   constructor(private apiService: ApiService) {}
 
@@ -38,7 +44,7 @@ export class AppComponent implements OnInit {
 
   onDeleteBook(book: Book) {
     console.log("Deleting", book.title)
-    this.apiService.deleteBook(book.id).subscribe({
+    this.apiService.deleteBook(book.id!).subscribe({
       next: () => {
         this.listBooks();
       },
@@ -58,5 +64,24 @@ export class AppComponent implements OnInit {
         console.error('Failed to mark book as read:', err);
       }
     });
+  }
+
+  addBook() {
+    this.apiService.addBook(this.newBook).subscribe({
+      next: () => {
+        this.newBook = { title: '', author: '', completed: false };
+        this.closeDialog();
+
+        this.listBooks()
+      },
+      error: (error) => {
+        console.error('Error adding book:', error);
+      }
+    });
+  }
+
+  closeDialog() {
+    const dialog = document.getElementById('add_book') as HTMLDialogElement;
+    dialog?.close();
   }
 }

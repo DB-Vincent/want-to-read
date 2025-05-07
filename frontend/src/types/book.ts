@@ -1,9 +1,9 @@
 export interface Book {
-    id: number;
+    id?: number;
     title: string;
     author: string;
-    created_at: string;  // ISO date string
-    updated_at: string;  // ISO date string
+    created_at?: string;
+    updated_at?: string;
     deleted_at?: string | null;  // Optional since it's marked with json:"-" in Go
     completed: boolean;
 } 

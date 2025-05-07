@@ -15,6 +15,10 @@ export class ApiService {
     return this.http.get<Book[]>(`${this.apiUrl}/books`)
   }
 
+  addBook(book: Book): Observable<Book> {
+    return this.http.post<Book>(`${this.apiUrl}/book`, book);
+  }
+
   markBookAsRead(book: Book): Observable<Book> {
     return this.http.patch<Book>(`${this.apiUrl}/book/${book.id}`, { completed: "true" })
   }
