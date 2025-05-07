@@ -1,5 +1,7 @@
 # Want to Read
 
+![Example of the want to read tool](./docs/example.png)
+
 A web application to manage your reading list and track books you want to read.
 
 
