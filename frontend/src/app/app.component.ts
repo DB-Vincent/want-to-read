@@ -43,19 +43,26 @@ export class AppComponent implements OnInit {
   }
 
   onDeleteBook(book: Book) {
-    console.log("Deleting", book.title)
-    this.apiService.deleteBook(book.id!).subscribe({
-      next: () => {
-        this.listBooks();
-      },
-      error: (err) => {
-        console.error('Failed to delete book:', err);
-      }
+    const dialog = document.getElementById('delete_book') as HTMLDialogElement;
+    dialog.showModal();
+
+    const form = dialog.querySelector('form');
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      dialog.close();
+      
+      this.apiService.deleteBook(book.id!).subscribe({
+        next: () => {
+          this.listBooks();
+        },
+        error: (err) => {
+          console.error('Failed to delete book:', err);
+        }
+      });
     });
   }
 
   onMarkAsRead(book: Book) {
-    console.log("Marking", book.title)
     this.apiService.markBookAsRead(book).subscribe({
       next: () => {
         this.listBooks();
@@ -70,7 +77,7 @@ export class AppComponent implements OnInit {
     this.apiService.addBook(this.newBook).subscribe({
       next: () => {
         this.newBook = { title: '', author: '', completed: false };
-        this.closeDialog();
+        this.closeAddBookDialog();
 
         this.listBooks()
       },
@@ -80,8 +87,13 @@ export class AppComponent implements OnInit {
     });
   }
 
-  closeDialog() {
+  closeAddBookDialog() {
     const dialog = document.getElementById('add_book') as HTMLDialogElement;
+    dialog?.close();
+  }
+
+  closeDeleteBookDialog() {
+    const dialog = document.getElementById('delete_book') as HTMLDialogElement;
     dialog?.close();
   }
 }
