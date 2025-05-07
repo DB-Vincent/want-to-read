@@ -4,6 +4,8 @@ definitions:
     properties:
       author:
         type: string
+      completed:
+        type: boolean
       created_at:
         type: string
       id:

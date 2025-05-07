@@ -186,6 +186,9 @@ const docTemplate = `{
                 "author": {
                     "type": "string"
                 },
+                "completed": {
+                    "type": "boolean"
+                },
                 "created_at": {
                     "type": "string"
                 },
