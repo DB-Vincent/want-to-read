@@ -9,7 +9,7 @@ COPY package.json package-lock.json ./
 RUN npm install
 
 COPY . .
-RUN npm run build --configuration=production
+RUN npm run build --configuration=production --base-href ./
 
 # Runtime image
 FROM nginx:stable-bullseye
@@ -18,9 +18,6 @@ FROM nginx:stable-bullseye
 COPY --from=build /usr/src/app/dist/frontend/browser/ /usr/share/nginx/html
 
 RUN printf 'server {\n\
-    listen 80;\n\
-    server_name _;\n\
-\n\
     root /usr/share/nginx/html;\n\
     index index.html;\n\
 \n\
