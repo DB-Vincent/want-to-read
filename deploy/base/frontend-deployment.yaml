@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: want-to-read-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: want-to-read-frontend
+  template:
+    metadata:
+      labels:
+        app: want-to-read-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: ghcr.io/db-vincent/want-to-read/frontend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80

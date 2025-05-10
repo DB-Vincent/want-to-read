@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: want-to-read-backend
+spec:
+  selector:
+    app: want-to-read-backend
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080

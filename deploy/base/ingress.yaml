@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: want-to-read
+spec:
+  rules:
+  - host: want-to-read.local
+    http:
+      paths:
+      - pathType: Prefix
+        path: /api
+        backend:
+          service:
+            name: want-to-read-backend
+            port:
+              number: 8080
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: want-to-read-frontend
+            port:
+              number: 80

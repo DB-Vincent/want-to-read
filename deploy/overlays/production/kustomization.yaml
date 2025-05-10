@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../../base
+
+patches:
+# Set the hostname of your instance (replace your-hostname.local) & change the ingress class to nginx
+- target:
+    group: networking.k8s.io
+    version: v1
+    kind: Ingress
+    name: want-to-read
+  patch: |-
+    - op: replace
+      path: /spec/rules/0/host
+      value: some-hostname.local
+    - op: add
+      path: /spec/ingressClassName
+      value: nginx

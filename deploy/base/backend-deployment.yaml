@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: want-to-read-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: want-to-read-backend
+  template:
+    metadata:
+      labels:
+        app: want-to-read-backend
+    spec:
+      containers:
+      - name: backend
+        image: ghcr.io/db-vincent/want-to-read/backend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: backend-db
+          mountPath: /app/
+          subPath: want-to-read.db
+      volumes:
+      - name: backend-db
+        persistentVolumeClaim:
+          claimName: want-to-read-backend-db-pvc
