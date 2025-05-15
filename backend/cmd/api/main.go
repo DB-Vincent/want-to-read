@@ -93,7 +93,7 @@ func main() {
 	}
 
 	// Swagger documentation endpoint
-	apiRoutes.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	if err := database.InitDB(); err != nil {
 		log.Fatal("Failed to initialize database:", err)
