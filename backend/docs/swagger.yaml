@@ -164,6 +164,31 @@ paths:
       summary: Authenticate user
       tags:
       - users
+  /api/register:
+    post:
+      description: Register a new user
+      parameters:
+      - description: Register request
+        in: body
+        name: register
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Register user
+      tags:
+      - users
   /health:
     get:
       description: Get the health status of the API

@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/DB-Vincent/want-to-read/internal/models"
 	"github.com/DB-Vincent/want-to-read/internal/services"
 	"github.com/gin-gonic/gin"
 )
@@ -35,23 +36,56 @@ type LoginRequest struct {
 func (h *UserHandler) Login(c *gin.Context) {
 	var req LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request", "details": err.Error()})
 		return
 	}
 
-	user, err := h.userService.Authenticate(req.Username, req.Password)
+	userInput := &models.User{
+		Username: req.Username,
+		Password: req.Password,
+	}
+
+	user, err := h.userService.Authenticate(userInput)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials", "details": err.Error()})
 		return
 	}
 
 	token, err := h.userService.GenerateJWT(user)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not generate token"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not generate token", "details": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"token": token})
+}
+
+// @Summary		Register user
+// @Description	Register a new user
+// @Tags		users
+// @Produce		json
+// @Param		register	body		LoginRequest	true	"Register request"
+// @Success		200		{object}	map[string]interface{}
+// @Failure		500		{string}	string
+// @Router		/api/register [post]
+func (h *UserHandler) Register(c *gin.Context) {
+	var req LoginRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request", "details": err.Error()})
+		return
+	}
+
+	var newUser models.User
+	newUser.Username = req.Username
+	newUser.Password = req.Password
+
+	user, err := h.userService.Register(&newUser)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not register user", "details": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"id": user.ID, "username": user.Username})
 }
 
 // Middleware to protect routes

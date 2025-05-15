@@ -58,6 +58,7 @@ func main() {
 
 	// User authentication endpoint
 	apiRoutes.POST("/login", userHandler.Login)
+	apiRoutes.POST("/register", userHandler.Register)
 
 	apiRoutes.Use(userHandler.AuthMiddleware())
 	{

@@ -3,6 +3,7 @@ package database
 import (
 	"log"
 
+	"github.com/DB-Vincent/want-to-read/internal/models"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -24,6 +25,11 @@ func InitDB() error {
 	// Enable foreign keys for SQLite
 	DB.Exec("PRAGMA foreign_keys = ON")
 
+	// Migrate the database schema
+	if err := DB.AutoMigrate(&models.Book{}, &models.User{}, &models.Health{}); err != nil {
+		log.Printf("Failed to migrate database: %v", err)
+	}
+
 	return nil
 }
 
@@ -34,4 +40,4 @@ func CloseDB() error {
 		return err
 	}
 	return sqlDB.Close()
-} 
+}
