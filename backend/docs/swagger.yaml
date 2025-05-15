@@ -36,7 +36,7 @@ info:
   title: Want to Read API
   version: "1.0"
 paths:
-  /book:
+  /api/book:
     post:
       description: Add a book into the database
       parameters:
@@ -60,7 +60,7 @@ paths:
       summary: Add book
       tags:
       - books
-  /book/{id}:
+  /api/book/{id}:
     delete:
       description: Deletes a book based on the given ID
       parameters:
@@ -111,7 +111,7 @@ paths:
       summary: Update book
       tags:
       - books
-  /books:
+  /api/books:
     get:
       description: Get a list of all books in the system
       produces:
@@ -130,20 +130,7 @@ paths:
       summary: List all books
       tags:
       - books
-  /health:
-    get:
-      description: Get the health status of the API
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.Health'
-      summary: Health check endpoint
-      tags:
-      - health
-  /login:
+  /api/login:
     post:
       description: Authenticate user and return JWT token
       parameters:
@@ -177,4 +164,17 @@ paths:
       summary: Authenticate user
       tags:
       - users
+  /health:
+    get:
+      description: Get the health status of the API
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Health'
+      summary: Health check endpoint
+      tags:
+      - health
 swagger: "2.0"

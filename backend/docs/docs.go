@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/book": {
+        "/api/book": {
             "post": {
                 "description": "Add a book into the database",
                 "produces": [
@@ -52,7 +52,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/book/{id}": {
+        "/api/book/{id}": {
             "delete": {
                 "description": "Deletes a book based on the given ID",
                 "produces": [
@@ -129,7 +129,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/books": {
+        "/api/books": {
             "get": {
                 "description": "Get a list of all books in the system",
                 "produces": [
@@ -158,27 +158,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/health": {
-            "get": {
-                "description": "Get the health status of the API",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "health"
-                ],
-                "summary": "Health check endpoint",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.Health"
-                        }
-                    }
-                }
-            }
-        },
-        "/login": {
+        "/api/login": {
             "post": {
                 "description": "Authenticate user and return JWT token",
                 "produces": [
@@ -225,6 +205,26 @@ const docTemplate = `{
                         "description": "Internal Server Error",
                         "schema": {
                             "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/health": {
+            "get": {
+                "description": "Get the health status of the API",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "health"
+                ],
+                "summary": "Health check endpoint",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Health"
                         }
                     }
                 }

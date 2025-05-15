@@ -22,10 +22,10 @@ import (
 
 func main() {
 	r := gin.Default()
-	apiRoutes := r.Group("/api")
 
 	// Enable CORS
-	apiRoutes.Use(func(c *gin.Context) {
+	// Apply CORS middleware globally so it covers all routes, including /api/login
+	r.Use(func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
@@ -38,6 +38,8 @@ func main() {
 
 		c.Next()
 	})
+
+	apiRoutes := r.Group("/api")
 
 	// Initialize services
 	healthService := services.NewHealthService()
@@ -55,7 +57,7 @@ func main() {
 	})
 
 	// User authentication endpoint
-	r.POST("/login", userHandler.Login)
+	apiRoutes.POST("/login", userHandler.Login)
 
 	apiRoutes.Use(userHandler.AuthMiddleware())
 	{

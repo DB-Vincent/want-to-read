@@ -31,7 +31,7 @@ type LoginRequest struct {
 // @Failure		400		{string}	string
 // @Failure		401		{string}	string
 // @Failure		500		{string}	string
-// @Router		/login [post]
+// @Router		/api/login [post]
 func (h *UserHandler) Login(c *gin.Context) {
 	var req LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {

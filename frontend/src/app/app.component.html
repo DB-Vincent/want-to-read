@@ -1,46 +1,5 @@
 <div class="my-8">
-    <app-navbar></app-navbar>
+  <app-navbar></app-navbar>
 </div>
-
-<dialog id="add_book" class="modal">
-    <div class="modal-box">
-        <h3 class="text-lg font-bold">Add new book</h3>
-        <p class="py-4">Add a new book to your reading list by entering the title and author. The book will be marked as
-            unread by default.</p>
-
-        <form (ngSubmit)="addBook()" #bookForm="ngForm">
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Book's title</legend>
-                <input type="text" class="input" placeholder="Moby Dick" name="title" [(ngModel)]="newBook.title" required />
-            </fieldset>
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Author</legend>
-                <input type="text" class="input" placeholder="Herman Melville" name="author" [(ngModel)]="newBook.author" required />
-            </fieldset>
-
-            <div class="modal-action">
-                <button type="button" class="btn" (click)="closeAddBookDialog()">Close</button>
-                <button type="submit" class="btn btn-success" [disabled]="!bookForm.form.valid">Add</button>
-            </div>
-        </form>
-    </div>
-</dialog>
-
-<dialog id="delete_book" class="modal">
-    <div class="modal-box">
-        <h3 class="text-lg font-bold">Are you sure?</h3>
-        <p class="py-4">You're about to delete a book, are you sure you want to do this?</p>
-
-        <form>
-            <div class="modal-action">
-                <button type="button" class="btn btn-primary" (click)="closeDeleteBookDialog()">No</button>
-                <button type="submit" class="btn">Yes</button>
-            </div>
-        </form>
-    </div>
-</dialog>
-
-<app-book-list [books]="books" (delete)="onDeleteBook($event)" (markAsRead)="onMarkAsRead($event)">
-</app-book-list>
 
 <router-outlet></router-outlet>
