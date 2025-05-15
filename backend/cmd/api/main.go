@@ -42,47 +42,55 @@ func main() {
 	// Initialize services
 	healthService := services.NewHealthService()
 	bookService := services.NewBookService()
+	userService := services.NewUserService()
 
 	// Initialize handlers
 	healthHandler := handlers.NewHealthHandler(healthService)
 	bookHandler := handlers.NewBookHandler(bookService)
+	userHandler := handlers.NewUserHandler(userService)
 
 	// Health check endpoint
 	r.GET("/health", func(c *gin.Context) {
 		healthHandler.Check(c.Writer, c.Request)
 	})
 
-	// Books endpoints
-	apiRoutes.GET("/books", func(c *gin.Context) {
-		books, err := bookService.ListBooks()
-		if err != nil {
-			c.JSON(500, gin.H{
-				"error": "Failed to fetch books",
-			})
-			return
-		}
-		c.JSON(200, books)
-	})
-	apiRoutes.POST("/book", func(c *gin.Context) {
-		var book models.Book
-		if err := c.ShouldBindJSON(&book); err != nil {
-			c.JSON(400, gin.H{
-				"error": "Invalid request body",
-			})
-			return
-		}
+	// User authentication endpoint
+	r.POST("/login", userHandler.Login)
 
-		createdBook, err := bookService.AddBook(&book)
-		if err != nil {
-			c.JSON(500, gin.H{
-				"error": "Failed to add book",
-			})
-			return
-		}
-		c.JSON(200, createdBook)
-	})
-	apiRoutes.PATCH("/book/:id", bookHandler.UpdateBook)
-	apiRoutes.DELETE("/book/:id", bookHandler.DeleteBook)
+	apiRoutes.Use(userHandler.AuthMiddleware())
+	{
+		// Books endpoints
+		apiRoutes.GET("/books", func(c *gin.Context) {
+			books, err := bookService.ListBooks()
+			if err != nil {
+				c.JSON(500, gin.H{
+					"error": "Failed to fetch books",
+				})
+				return
+			}
+			c.JSON(200, books)
+		})
+		apiRoutes.POST("/book", func(c *gin.Context) {
+			var book models.Book
+			if err := c.ShouldBindJSON(&book); err != nil {
+				c.JSON(400, gin.H{
+					"error": "Invalid request body",
+				})
+				return
+			}
+
+			createdBook, err := bookService.AddBook(&book)
+			if err != nil {
+				c.JSON(500, gin.H{
+					"error": "Failed to add book",
+				})
+				return
+			}
+			c.JSON(200, createdBook)
+		})
+		apiRoutes.PATCH("/book/:id", bookHandler.UpdateBook)
+		apiRoutes.DELETE("/book/:id", bookHandler.DeleteBook)
+	}
 
 	// Swagger documentation endpoint
 	apiRoutes.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

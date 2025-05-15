@@ -1,5 +1,12 @@
 basePath: /
 definitions:
+  handlers.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
   models.Book:
     properties:
       author:
@@ -136,4 +143,38 @@ paths:
       summary: Health check endpoint
       tags:
       - health
+  /login:
+    post:
+      description: Authenticate user and return JWT token
+      parameters:
+      - description: Login request
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Authenticate user
+      tags:
+      - users
 swagger: "2.0"
