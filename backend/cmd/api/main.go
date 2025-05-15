@@ -11,6 +11,7 @@ import (
 	"github.com/DB-Vincent/want-to-read/internal/database"
 	"github.com/DB-Vincent/want-to-read/internal/handlers"
 	"github.com/DB-Vincent/want-to-read/internal/models"
+	"github.com/DB-Vincent/want-to-read/internal/seed"
 	"github.com/DB-Vincent/want-to-read/internal/services"
 )
 
@@ -58,7 +59,7 @@ func main() {
 
 	// User authentication endpoint
 	apiRoutes.POST("/login", userHandler.Login)
-	apiRoutes.POST("/register", userHandler.Register)
+	apiRoutes.POST("/register", userHandler.AuthMiddleware(), userHandler.SuperUserMiddleware(), userHandler.Register)
 
 	apiRoutes.Use(userHandler.AuthMiddleware())
 	{
@@ -105,6 +106,12 @@ func main() {
 
 	if err := database.DB.AutoMigrate(&models.Book{}); err != nil {
 		log.Fatal("Failed to migrate database:", err)
+	}
+
+	for _, seed := range seed.All() {
+		if err := seed.Run(database.DB); err != nil {
+			log.Fatalf("Running seed '%s', failed with error: %s", seed.Name, err)
+		}
 	}
 
 	if err := r.Run(":8080"); err != nil {

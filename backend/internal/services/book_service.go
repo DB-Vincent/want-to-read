@@ -53,5 +53,5 @@ func (s *BookService) DeleteBook(id int) (int, error) {
 		return 0, err
 	}
 
-	return id, nil	
+	return id, nil
 }

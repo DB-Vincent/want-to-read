@@ -37,7 +37,7 @@ func (s *UserService) Authenticate(user *models.User) (*models.User, error) {
 }
 
 func (s *UserService) Register(user *models.User) (*models.User, error) {
-	hashedPassword, err := GenerateHash(user.Password)
+	hashedPassword, err := s.GenerateHash(user.Password)
 	user.Password = hashedPassword
 	if err != nil {
 		return nil, err
@@ -51,7 +51,7 @@ func (s *UserService) Register(user *models.User) (*models.User, error) {
 	return user, nil
 }
 
-func GenerateHash(password string) (string, error) {
+func (s *UserService) GenerateHash(password string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return "", err
@@ -63,6 +63,7 @@ func (s *UserService) GenerateJWT(user *models.User) (string, error) {
 	claims := jwt.MapClaims{
 		"user_id":  user.ID,
 		"username": user.Username,
+		"is_super": user.IsSuper,
 		"exp":      time.Now().Add(time.Hour * 24).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

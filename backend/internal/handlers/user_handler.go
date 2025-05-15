@@ -6,6 +6,7 @@ import (
 	"github.com/DB-Vincent/want-to-read/internal/models"
 	"github.com/DB-Vincent/want-to-read/internal/services"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type UserHandler struct {
@@ -88,21 +89,43 @@ func (h *UserHandler) Register(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"id": user.ID, "username": user.Username})
 }
 
-// Middleware to protect routes
+// Helper to extract and validate JWT token from Authorization header
+func (h *UserHandler) extractToken(c *gin.Context) (*jwt.Token, error) {
+	authHeader := c.GetHeader("Authorization")
+	if len(authHeader) < 7 || authHeader[:7] != "Bearer " {
+		return nil, http.ErrNoCookie // Use as a generic error
+	}
+	tokenStr := authHeader[7:]
+	return h.userService.ParseJWT(tokenStr)
+}
+
+// Middleware to check if the user is authenticated
 func (h *UserHandler) AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		authHeader := c.GetHeader("Authorization")
-		if len(authHeader) < 7 || authHeader[:7] != "Bearer " {
+		token, err := h.extractToken(c)
+		if err != nil || token == nil || !token.Valid {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Missing or invalid token"})
+			return
+		}
+		c.Next()
+	}
+}
+
+// Middleware to check if user is a super user
+func (h *UserHandler) SuperUserMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		token, err := h.extractToken(c)
+		if err != nil || token == nil || !token.Valid {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Missing or invalid token"})
 			return
 		}
 
-		tokenStr := authHeader[7:]
-		token, err := h.userService.ParseJWT(tokenStr)
-		if err != nil || !token.Valid {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if !ok || claims["is_super"] != true {
+			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "Super user access required"})
 			return
 		}
+
 		c.Next()
 	}
 }
