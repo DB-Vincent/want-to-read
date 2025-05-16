@@ -1,0 +1,26 @@
+<app-admin-navbar></app-admin-navbar>
+
+<div class="card bg-base-100 card-border border-base-300 p-5 mt-4">
+  <h1 class="text-xl font-semibold">Admin</h1>
+  <p class="text-sm text-gray-500">
+    This is the admin panel, where you can manage users and their roles.
+  </p>
+
+  <h2 class="text-lg font-semibold mt-4">Users</h2>
+
+  <div class="overflow-x-auto">
+    <table class="table w-full">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Super user</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.username }}</td>
+          <td>{{ user.is_super }}</td>
+        </tr>
+      </tbody>
+    </table>
+</div>

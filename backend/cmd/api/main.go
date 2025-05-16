@@ -15,12 +15,11 @@ import (
 	"github.com/DB-Vincent/want-to-read/internal/services"
 )
 
-//	@title			Want to Read API
-//	@version		1.0
-//	@description	API for managing your reading list
-//	@host			localhost:8080
-//	@BasePath		/
-
+// @title			Want to Read API
+// @version		1.0
+// @description	API for managing your reading list
+// @host			localhost:8080
+// @BasePath		/
 func main() {
 	r := gin.Default()
 
@@ -60,6 +59,9 @@ func main() {
 	// User authentication endpoint
 	apiRoutes.POST("/login", userHandler.Login)
 	apiRoutes.POST("/register", userHandler.AuthMiddleware(), userHandler.SuperUserMiddleware(), userHandler.Register)
+
+	// User management endpoints
+	apiRoutes.GET("/users", userHandler.AuthMiddleware(), userHandler.SuperUserMiddleware(), userHandler.ListUsers)
 
 	apiRoutes.Use(userHandler.AuthMiddleware())
 	{

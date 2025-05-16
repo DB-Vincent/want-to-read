@@ -20,4 +20,8 @@ export class NavbarComponent {
   isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
   }
+
+  isSuper(): boolean {
+    return this.authService.isSuper();
+  }
 } 

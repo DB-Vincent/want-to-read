@@ -51,6 +51,14 @@ func (s *UserService) Register(user *models.User) (*models.User, error) {
 	return user, nil
 }
 
+func (s *UserService) ListUsers() ([]models.User, error) {
+	var users []models.User
+	if err := database.DB.Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
+}
+
 func (s *UserService) GenerateHash(password string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {

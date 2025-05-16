@@ -20,6 +20,22 @@ export class AuthService {
     );
   }
 
+  register(user: User): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/register`, user, {
+      headers: {
+        Authorization: `Bearer ${this.getToken()}`,
+      },
+    });
+  }
+
+  listUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/users`, {
+      headers: {
+        Authorization: `Bearer ${this.getToken()}`,
+      },
+    });
+  }
+
   logout() {
     localStorage.removeItem('jwt_token');
   }
@@ -29,6 +45,26 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    const token = this.getToken();
+    if (!token) return false;
+
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const expirationDate = new Date(payload.exp * 1000);
+    const currentDate = new Date();
+
+    if (expirationDate < currentDate) {
+      this.logout();
+      return false;
+    }
+    
+    return true;
+  }
+
+  isSuper(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
+
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.is_super === true;
   }
 }

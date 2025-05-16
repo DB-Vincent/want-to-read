@@ -29,6 +29,17 @@ definitions:
       timestamp:
         type: string
     type: object
+  models.User:
+    properties:
+      id:
+        type: integer
+      is_super:
+        type: boolean
+      password:
+        type: string
+      username:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -187,6 +198,25 @@ paths:
           schema:
             type: string
       summary: Register user
+      tags:
+      - users
+  /api/users:
+    get:
+      description: List all users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: List users
       tags:
       - users
   /health:

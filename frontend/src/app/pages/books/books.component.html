@@ -36,7 +36,7 @@
         </button>
         <button
           type="submit"
-          class="btn btn-success"
+          class="btn btn-primary"
           [disabled]="!bookForm.form.valid"
         >
           Add
@@ -67,6 +67,25 @@
     </form>
   </div>
 </dialog>
+
+<div class="flex flex-row justify-between items-center mb-4">
+  <h2 class="text-xl font-bold text-center">My Books</h2>
+
+  <button class="btn btn-square" onclick="add_book.showModal()">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      fill="currentColor"
+      viewBox="0 0 16 16"
+    >
+      <path
+        fill-rule="evenodd"
+        d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"
+      />
+    </svg>
+  </button>
+</div>
 
 <app-book-list
   [books]="books"

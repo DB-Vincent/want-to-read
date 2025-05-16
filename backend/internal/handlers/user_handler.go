@@ -89,6 +89,23 @@ func (h *UserHandler) Register(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"id": user.ID, "username": user.Username})
 }
 
+// @Summary		List users
+// @Description	List all users
+// @Tags		users
+// @Produce		json
+// @Success		200		{array}		models.User
+// @Failure		500		{string}	string
+// @Router		/api/users [get]
+func (h *UserHandler) ListUsers(c *gin.Context) {
+	users, err := h.userService.ListUsers()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not retrieve users", "details": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, users)
+}
+
 // Helper to extract and validate JWT token from Authorization header
 func (h *UserHandler) extractToken(c *gin.Context) (*jwt.Token, error) {
 	authHeader := c.GetHeader("Authorization")
