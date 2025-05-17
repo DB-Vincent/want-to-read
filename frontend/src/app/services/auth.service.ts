@@ -36,6 +36,18 @@ export class AuthService {
     });
   }
 
+  changePassword(oldPassword: string, newPassword: string): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/change-password`,
+      { old_password: oldPassword, new_password: newPassword },
+      {
+        headers: {
+          Authorization: `Bearer ${this.getToken()}`,
+        },
+      }
+    );
+  }
+
   logout() {
     localStorage.removeItem('jwt_token');
   }

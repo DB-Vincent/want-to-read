@@ -1,5 +1,12 @@
 basePath: /
 definitions:
+  handlers.ChangePasswordRequest:
+    properties:
+      new_password:
+        type: string
+      old_password:
+        type: string
+    type: object
   handlers.LoginRequest:
     properties:
       password:
@@ -141,6 +148,40 @@ paths:
       summary: List all books
       tags:
       - books
+  /api/change_password:
+    post:
+      description: Change user password
+      parameters:
+      - description: Change password request
+        in: body
+        name: change_password
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.ChangePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Change password
+      tags:
+      - users
   /api/login:
     post:
       description: Authenticate user and return JWT token

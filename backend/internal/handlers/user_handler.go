@@ -7,6 +7,7 @@ import (
 	"github.com/DB-Vincent/want-to-read/internal/services"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserHandler struct {
@@ -22,6 +23,11 @@ func NewUserHandler(userService *services.UserService) *UserHandler {
 type LoginRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
+}
+
+type ChangePasswordRequest struct {
+	OldPassword string `json:"old_password"`
+	NewPassword string `json:"new_password"`
 }
 
 // @Summary		Authenticate user
@@ -104,6 +110,63 @@ func (h *UserHandler) ListUsers(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, users)
+}
+
+// @Summary		Change password
+// @Description	Change user password
+// @Tags		users
+// @Produce		json
+// @Param		change_password	body		ChangePasswordRequest	true	"Change password request"
+// @Success		200		{object}	map[string]string
+// @Failure		400		{string}	string
+// @Failure		401		{string}	string
+// @Failure		500		{string}	string
+// @Router		/api/change_password [post]
+func (h *UserHandler) ChangePassword(c *gin.Context) {
+	var req ChangePasswordRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request", "details": err.Error()})
+		return
+	}
+
+	token, err := h.extractToken(c)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Missing or invalid token", "details": err.Error()})
+		return
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token claims"})
+		return
+	}
+	userID, ok := claims["user_id"].(float64)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token claims"})
+		return
+	}
+	dbUser, err := h.userService.GetUserByID(uint(userID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not retrieve user", "details": err.Error()})
+		return
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(req.OldPassword)); err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials", "details": err.Error()})
+		return
+	}
+
+	if err := h.userService.ChangePassword(&models.User{
+		ID:       dbUser.ID,
+		Username: dbUser.Username,
+		Password: req.NewPassword,
+		IsSuper:  dbUser.IsSuper,
+	}); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not change password", "details": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Password changed successfully"})
 }
 
 // Helper to extract and validate JWT token from Authorization header

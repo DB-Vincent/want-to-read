@@ -62,6 +62,7 @@ func main() {
 
 	// User management endpoints
 	apiRoutes.GET("/users", userHandler.AuthMiddleware(), userHandler.SuperUserMiddleware(), userHandler.ListUsers)
+	apiRoutes.POST("/change-password", userHandler.AuthMiddleware(), userHandler.ChangePassword)
 
 	apiRoutes.Use(userHandler.AuthMiddleware())
 	{

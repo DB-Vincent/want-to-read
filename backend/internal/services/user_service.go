@@ -51,6 +51,33 @@ func (s *UserService) Register(user *models.User) (*models.User, error) {
 	return user, nil
 }
 
+func (s *UserService) ChangePassword(user *models.User) error {
+	if user.Password == "" {
+		return errors.New("password is required")
+	}
+
+	hashedPassword, err := s.GenerateHash(user.Password)
+	if err != nil {
+		return err
+	}
+
+	user.Password = hashedPassword
+	result := database.DB.Save(user)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}
+
+func (s *UserService) GetUserByID(id uint) (*models.User, error) {
+	var user models.User
+	if err := database.DB.First(&user, id).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
 func (s *UserService) ListUsers() ([]models.User, error) {
 	var users []models.User
 	if err := database.DB.Find(&users).Error; err != nil {

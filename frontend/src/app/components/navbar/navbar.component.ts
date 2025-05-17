@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-navbar',
   imports: [CommonModule],
   templateUrl: './navbar.component.html',
-  standalone: true
+  standalone: true,
 })
 export class NavbarComponent {
   constructor(private authService: AuthService, public router: Router) {}
@@ -24,4 +24,4 @@ export class NavbarComponent {
   isSuper(): boolean {
     return this.authService.isSuper();
   }
-} 
+}
