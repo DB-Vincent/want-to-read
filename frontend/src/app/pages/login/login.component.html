@@ -17,37 +17,40 @@
   </div>
 </ng-container>
 
-<form (ngSubmit)="login()" #loginForm="ngForm">
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend">Username</legend>
-    <input
-      type="text"
-      class="input"
-      placeholder="Username"
-      name="username"
-      [(ngModel)]="userInput.username"
-      required
-    />
-  </fieldset>
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend">Password</legend>
-    <input
-      type="password"
-      class="input"
-      placeholder="Password"
-      name="Password"
-      [(ngModel)]="userInput.password"
-      required
-    />
-  </fieldset>
+<div class="card bg-base-100 card-border border-base-300 p-5 mt-4">
+  <h1 class="text-xl font-semibold">Login</h1>
+  <p class="text-sm text-gray-500">This allows you to login to the system.</p>
 
-  <div class="modal-action">
+  <form (ngSubmit)="login()" #loginForm="ngForm">
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Username</legend>
+      <input
+        type="text"
+        class="input"
+        placeholder="Username"
+        name="username"
+        [(ngModel)]="userInput.username"
+        required
+      />
+    </fieldset>
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Password</legend>
+      <input
+        type="password"
+        class="input"
+        placeholder="Password"
+        name="Password"
+        [(ngModel)]="userInput.password"
+        required
+      />
+    </fieldset>
+
     <button
       type="submit"
-      class="btn btn-success"
+      class="btn btn-success mt-4"
       [disabled]="!loginForm.form.valid"
     >
-      Add
+      Login
     </button>
-  </div>
-</form>
+  </form>
+</div>
