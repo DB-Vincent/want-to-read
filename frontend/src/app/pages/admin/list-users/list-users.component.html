@@ -1,0 +1,22 @@
+<app-admin-navbar></app-admin-navbar>
+
+<div class="card bg-base-100 card-border border-base-300 p-5 mt-4">
+  <h1 class="text-xl font-semibold">Users</h1>
+
+  <div class="overflow-x-auto">
+    <table class="table w-full">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Super user</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.username }}</td>
+          <td>{{ user.is_super }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -5,6 +5,7 @@ import { AuthGuard } from './guards/auth/auth.guard';
 import { AdminGuard } from './guards/auth/admin.guard';
 import { AdminComponent } from './pages/admin/admin.component';
 import { AddUserComponent } from './pages/admin/add-user/add-user.component';
+import { ListUsersComponent } from './pages/admin/list-users/list-users.component';
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
 
 export const routes: Routes = [
@@ -28,8 +29,13 @@ export const routes: Routes = [
     canActivate: [AuthGuard, AdminGuard],
   },
   {
+    path: 'admin/list-users',
+    component: ListUsersComponent,
+    canActivate: [AuthGuard, AdminGuard],
+  },
+  {
     path: 'change-password',
     component: ChangePasswordComponent,
     canActivate: [AuthGuard],
-  }
+  },
 ];
