@@ -7,6 +7,13 @@ definitions:
       old_password:
         type: string
     type: object
+  handlers.EditUserRequest:
+    properties:
+      is_super:
+        type: boolean
+      username:
+        type: string
+    type: object
   handlers.LoginRequest:
     properties:
       password:
@@ -239,6 +246,49 @@ paths:
           schema:
             type: string
       summary: Register user
+      tags:
+      - users
+  /api/user/{id}:
+    patch:
+      description: Edit user details
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Edit user request
+        in: body
+        name: edit_user
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.EditUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Edit user
       tags:
       - users
   /api/users:

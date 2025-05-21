@@ -48,6 +48,14 @@ export class AuthService {
     );
   }
 
+  updateUser(user: User): Observable<User> {
+    return this.http.patch<User>(`${this.apiUrl}/user/${user.id}`, user, {
+      headers: {
+        Authorization: `Bearer ${this.getToken()}`,
+      },
+    });
+  }
+
   logout() {
     localStorage.removeItem('jwt_token');
   }

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/DB-Vincent/want-to-read/internal/models"
 	"github.com/DB-Vincent/want-to-read/internal/services"
@@ -28,6 +29,11 @@ type LoginRequest struct {
 type ChangePasswordRequest struct {
 	OldPassword string `json:"old_password"`
 	NewPassword string `json:"new_password"`
+}
+
+type EditUserRequest struct {
+	Username string `json:"username"`
+	IsSuper  bool   `json:"is_super"`
 }
 
 // @Summary		Authenticate user
@@ -167,6 +173,50 @@ func (h *UserHandler) ChangePassword(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Password changed successfully"})
+}
+
+// @Summary		Edit user
+// @Description	Edit user details
+// @Tags		users
+// @Produce		json
+// @Param		id		path		int	true	"User ID"
+// @Param		edit_user	body		EditUserRequest	true	"Edit user request"
+// @Success		200		{object}	map[string]string
+// @Failure		400		{string}	string
+// @Failure		401		{string}	string
+// @Failure		404		{string}	string
+// @Failure		500		{string}	string
+// @Router		/api/user/{id} [patch]
+func (h *UserHandler) EditUser(c *gin.Context) {
+	var req EditUserRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request", "details": err.Error()})
+		return
+	}
+
+	idParam := c.Param("id")
+	idUint64, err := strconv.ParseUint(idParam, 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID", "details": err.Error()})
+		return
+	}
+
+	userId := uint(idUint64)
+	user, err := h.userService.GetUserByID(userId)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Could not retrieve user", "details": err.Error()})
+		return
+	}
+
+	user.Username = req.Username
+	user.IsSuper = req.IsSuper
+
+	if _, err := h.userService.UpdateUser(user); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not update user", "details": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "User updated successfully"})
 }
 
 // Helper to extract and validate JWT token from Authorization header

@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 })
 export class ListUsersComponent implements OnInit {
   users: User[] = [];
+  errorMessage: string = "";
 
   constructor(private authService: AuthService) {}
 
@@ -28,5 +29,19 @@ export class ListUsersComponent implements OnInit {
         // Handle error, show a message to the user, etc.
       }
     );
+  }
+
+  makeSuperUser(user: User, superUser: boolean = true) {
+    const updatedUser: User = { ...user, is_super: superUser };
+
+    this.authService.updateUser(updatedUser).subscribe(
+      () => {
+        this.listUsers()
+      },
+      (error) => {
+        this.errorMessage = error.error.error;
+      }
+    );
+    console.log('Making user a superuser:', user.id);
   }
 }

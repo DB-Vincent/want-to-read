@@ -1,5 +1,24 @@
 <app-admin-navbar></app-admin-navbar>
 
+<ng-container *ngIf="this.errorMessage">
+  <div role="alert" class="alert alert-error">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-6 w-6 shrink-0 stroke-current"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
+    </svg>
+    <span>Failed to update user: {{ this.errorMessage }}</span>
+  </div>
+</ng-container>
+
 <div class="card bg-base-100 card-border border-base-300 p-5 mt-4">
   <h1 class="text-xl font-semibold">Users</h1>
 
@@ -9,12 +28,19 @@
         <tr>
           <th>Username</th>
           <th>Super user</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let user of users">
           <td>{{ user.username }}</td>
           <td>{{ user.is_super }}</td>
+          <ng-container *ngIf="user.is_super">
+            <td><button class="btn btn-secondary" (click)="makeSuperUser(user, false)">Remove admin</button></td>
+          </ng-container>
+          <ng-container *ngIf="!user.is_super">
+            <td><button class="btn btn-primary" (click)="makeSuperUser(user)">Make admin</button></td>
+          </ng-container>
         </tr>
       </tbody>
     </table>
