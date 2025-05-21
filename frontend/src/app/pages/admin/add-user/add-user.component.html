@@ -1,0 +1,49 @@
+<app-admin-navbar></app-admin-navbar>
+
+<div class="card bg-base-100 card-border border-base-300 p-5 mt-4">
+  <h1 class="text-xl font-semibold">Add user</h1>
+  <p class="text-sm text-gray-500">
+    This allows you to add a user to the system. You can also assign them a
+    role.
+  </p>
+
+  <form (ngSubmit)="register()" #loginForm="ngForm">
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Username</legend>
+      <input
+        type="text"
+        class="input"
+        placeholder="Username"
+        name="username"
+        [(ngModel)]="userInput.username"
+        required
+      />
+    </fieldset>
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Password</legend>
+      <input
+        type="password"
+        class="input"
+        placeholder="Password"
+        name="Password"
+        [(ngModel)]="userInput.password"
+        required
+      />
+    </fieldset>
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Extra permissions</legend>
+      <label class="label">
+        <input type="checkbox" class="checkbox" />
+        Is admin
+      </label>
+    </fieldset>
+
+    <button
+      type="submit"
+      class="btn btn-success mt-4"
+      [disabled]="!loginForm.form.valid"
+    >
+      Add
+    </button>
+  </form>
+</div>

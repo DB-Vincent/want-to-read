@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gin-gonic/gin"
-	"github.com/DB-Vincent/want-to-read/internal/services"
-	"github.com/DB-Vincent/want-to-read/internal/models"
 	"github.com/DB-Vincent/want-to-read/internal/database"
+	"github.com/DB-Vincent/want-to-read/internal/models"
+	"github.com/DB-Vincent/want-to-read/internal/services"
+	"github.com/gin-gonic/gin"
 )
 
 type BookHandler struct {
@@ -21,13 +21,13 @@ func NewBookHandler(bookService *services.BookService) *BookHandler {
 	}
 }
 
-//	@Summary		List all books
-//	@Description	Get a list of all books in the system
-//	@Tags			books
-//	@Produce		json
-//	@Success		200	{array}		models.Book
-//	@Failure		500	{string}	string
-//	@Router			/books [get]
+// @Summary		List all books
+// @Description	Get a list of all books in the system
+// @Tags			books
+// @Produce		json
+// @Success		200	{array}		models.Book
+// @Failure		500	{string}	string
+// @Router			/api/books [get]
 func (h *BookHandler) ListBooks(w http.ResponseWriter, r *http.Request) {
 	books, err := h.bookService.ListBooks()
 	if err != nil {
@@ -42,14 +42,14 @@ func (h *BookHandler) ListBooks(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-//	@Summary		Add book
-//	@Description	Add a book into the database
-//	@Tags			books
-//	@Produce		json
-//	@Param			book	body		object	true	"Book to add"
-//	@Success		200		{object}	models.Book
-//	@Failure		500		{string}	string
-//	@Router			/book [post]
+// @Summary		Add book
+// @Description	Add a book into the database
+// @Tags			books
+// @Produce		json
+// @Param			book	body		object	true	"Book to add"
+// @Success		200		{object}	models.Book
+// @Failure		500		{string}	string
+// @Router			/api/book [post]
 func (h *BookHandler) AddBook(w http.ResponseWriter, r *http.Request) {
 	var book models.Book
 	if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
@@ -70,15 +70,15 @@ func (h *BookHandler) AddBook(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-//	@Summary		Update book
-//	@Description	Updates a book based on the given ID
-//	@Tags			books
-//	@Produce		json
-//	@Param			id		path		int		true	"ID of book"
-//	@Param			book	body		object	true	"Adjusted book object"
-//	@Success		200		{object}	models.Book
-//	@Failure		500		{string}	string
-//	@Router			/book/{id} [patch]
+// @Summary		Update book
+// @Description	Updates a book based on the given ID
+// @Tags			books
+// @Produce		json
+// @Param			id		path		int		true	"ID of book"
+// @Param			book	body		object	true	"Adjusted book object"
+// @Success		200		{object}	models.Book
+// @Failure		500		{string}	string
+// @Router			/api/book/{id} [patch]
 func (h *BookHandler) UpdateBook(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -117,14 +117,14 @@ func (h *BookHandler) UpdateBook(c *gin.Context) {
 	c.JSON(200, existingBook)
 }
 
-//	@Summary		Delete book
-//	@Description	Deletes a book based on the given ID
-//	@Tags			books
-//	@Produce		json
-//	@Param			id		path		int		true	"ID of book"
-//	@Success		200		{string}	string
-//	@Failure		500		{string}	string
-//	@Router			/book/{id} [delete]
+// @Summary		Delete book
+// @Description	Deletes a book based on the given ID
+// @Tags			books
+// @Produce		json
+// @Param			id		path		int		true	"ID of book"
+// @Success		200		{string}	string
+// @Failure		500		{string}	string
+// @Router			/api/book/{id} [delete]
 func (h *BookHandler) DeleteBook(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

@@ -1,0 +1,95 @@
+<dialog id="add_book" class="modal">
+  <div class="modal-box">
+    <h3 class="text-lg font-bold">Add new book</h3>
+    <p class="py-4">
+      Add a new book to your reading list by entering the title and author. The
+      book will be marked as unread by default.
+    </p>
+
+    <form (ngSubmit)="addBook()" #bookForm="ngForm">
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Book's title</legend>
+        <input
+          type="text"
+          class="input"
+          placeholder="Moby Dick"
+          name="title"
+          [(ngModel)]="newBook.title"
+          required
+        />
+      </fieldset>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Author</legend>
+        <input
+          type="text"
+          class="input"
+          placeholder="Herman Melville"
+          name="author"
+          [(ngModel)]="newBook.author"
+          required
+        />
+      </fieldset>
+
+      <div class="modal-action">
+        <button type="button" class="btn" (click)="closeAddBookDialog()">
+          Close
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="!bookForm.form.valid"
+        >
+          Add
+        </button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<dialog id="delete_book" class="modal">
+  <div class="modal-box">
+    <h3 class="text-lg font-bold">Are you sure?</h3>
+    <p class="py-4">
+      You're about to delete a book, are you sure you want to do this?
+    </p>
+
+    <form>
+      <div class="modal-action">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="closeDeleteBookDialog()"
+        >
+          No
+        </button>
+        <button type="submit" class="btn">Yes</button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<div class="flex flex-row justify-between items-center mb-4">
+  <h2 class="text-xl font-bold text-center">My Books</h2>
+
+  <button class="btn btn-square" onclick="add_book.showModal()">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      fill="currentColor"
+      viewBox="0 0 16 16"
+    >
+      <path
+        fill-rule="evenodd"
+        d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"
+      />
+    </svg>
+  </button>
+</div>
+
+<app-book-list
+  [books]="books"
+  (delete)="onDeleteBook($event)"
+  (markAsRead)="onMarkAsRead($event)"
+>
+</app-book-list>

@@ -1,0 +1,56 @@
+<ng-container *ngIf="this.errorMessage">
+  <div role="alert" class="alert alert-error">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-6 w-6 shrink-0 stroke-current"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
+    </svg>
+    <span>Failed to login: {{ this.errorMessage }}</span>
+  </div>
+</ng-container>
+
+<div class="card bg-base-100 card-border border-base-300 p-5 mt-4">
+  <h1 class="text-xl font-semibold">Login</h1>
+  <p class="text-sm text-gray-500">This allows you to login to the system.</p>
+
+  <form (ngSubmit)="login()" #loginForm="ngForm">
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Username</legend>
+      <input
+        type="text"
+        class="input"
+        placeholder="Username"
+        name="username"
+        [(ngModel)]="userInput.username"
+        required
+      />
+    </fieldset>
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Password</legend>
+      <input
+        type="password"
+        class="input"
+        placeholder="Password"
+        name="Password"
+        [(ngModel)]="userInput.password"
+        required
+      />
+    </fieldset>
+
+    <button
+      type="submit"
+      class="btn btn-success mt-4"
+      [disabled]="!loginForm.form.valid"
+    >
+      Login
+    </button>
+  </form>
+</div>
