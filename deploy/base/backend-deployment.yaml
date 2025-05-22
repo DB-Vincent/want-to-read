@@ -22,6 +22,14 @@ spec:
         - name: backend-db
           mountPath: /app/
           subPath: want-to-read.db
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
       volumes:
       - name: backend-db
         persistentVolumeClaim:
