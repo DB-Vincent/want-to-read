@@ -275,7 +275,7 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "ID of user",
                         "name": "user_id",
-                        "in": "query",
+                        "in": "path",
                         "required": true
                     }
                 ],
@@ -318,11 +318,24 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of user",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "type": "string"
                         }
@@ -353,6 +366,13 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "type": "integer",
+                        "description": "ID of user",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "Adjusted book object",
                         "name": "book",
                         "in": "body",
@@ -366,7 +386,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Book"
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     "500": {
@@ -378,7 +404,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/users/{user_id}/books/{id}": {
+        "/api/users/{user_id}/books": {
             "get": {
                 "description": "Get a list of all books in the system",
                 "produces": [
@@ -388,6 +414,15 @@ const docTemplate = `{
                     "books"
                 ],
                 "summary": "List all books",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of user",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -396,6 +431,12 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/models.Book"
                             }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     "500": {

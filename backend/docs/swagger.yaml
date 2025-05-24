@@ -229,7 +229,7 @@ paths:
         schema:
           type: object
       - description: ID of user
-        in: query
+        in: path
         name: user_id
         required: true
         type: integer
@@ -260,11 +260,20 @@ paths:
         name: id
         required: true
         type: integer
+      - description: ID of user
+        in: path
+        name: user_id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
         "200":
           description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
           schema:
             type: string
         "500":
@@ -282,6 +291,11 @@ paths:
         name: id
         required: true
         type: integer
+      - description: ID of user
+        in: path
+        name: user_id
+        required: true
+        type: integer
       - description: Adjusted book object
         in: body
         name: book
@@ -294,7 +308,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Book'
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
         "500":
           description: Internal Server Error
           schema:
@@ -302,9 +320,15 @@ paths:
       summary: Update book
       tags:
       - books
-  /api/users/{user_id}/books/{id}:
+  /api/users/{user_id}/books:
     get:
       description: Get a list of all books in the system
+      parameters:
+      - description: ID of user
+        in: path
+        name: user_id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -314,6 +338,10 @@ paths:
             items:
               $ref: '#/definitions/models.Book'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
         "500":
           description: Internal Server Error
           schema:
