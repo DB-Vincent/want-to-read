@@ -29,12 +29,12 @@ func (s *BookService) AddBook(book *models.Book, userID uint) (*models.Book, err
 	return book, nil
 }
 
-func (s *BookService) UpdateBook(id int, userID uint, book *models.Book) (*models.Book, error) {
+func (s *BookService) UpdateBook(id int, userID uint, updates map[string]interface{}) (*models.Book, error) {
 	var existingBook models.Book
 	if err := database.DB.Where("id = ? AND user_id = ?", id, userID).First(&existingBook).Error; err != nil {
 		return nil, err
 	}
-	if err := database.DB.Model(&existingBook).Updates(book).Error; err != nil {
+	if err := database.DB.Model(&existingBook).Updates(updates).Error; err != nil {
 		return nil, err
 	}
 	return &existingBook, nil

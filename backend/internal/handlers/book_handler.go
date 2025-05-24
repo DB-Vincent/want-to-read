@@ -96,12 +96,12 @@ func (h *BookHandler) UpdateBook(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid book ID", "details": err.Error()})
 		return
 	}
-	var updateData models.Book
+	var updateData map[string]interface{}
 	if err := c.ShouldBindJSON(&updateData); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body", "details": err.Error()})
 		return
 	}
-	updatedBook, err := h.bookService.UpdateBook(id, uint(userID), &updateData)
+	updatedBook, err := h.bookService.UpdateBook(id, uint(userID), updateData)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update book", "details": err.Error()})
 		return
