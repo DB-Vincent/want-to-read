@@ -35,6 +35,8 @@ definitions:
         type: string
       updated_at:
         type: string
+      user_id:
+        type: integer
     type: object
   models.Health:
     properties:
@@ -61,100 +63,6 @@ info:
   title: Want to Read API
   version: "1.0"
 paths:
-  /api/book:
-    post:
-      description: Add a book into the database
-      parameters:
-      - description: Book to add
-        in: body
-        name: book
-        required: true
-        schema:
-          type: object
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.Book'
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      summary: Add book
-      tags:
-      - books
-  /api/book/{id}:
-    delete:
-      description: Deletes a book based on the given ID
-      parameters:
-      - description: ID of book
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      summary: Delete book
-      tags:
-      - books
-    patch:
-      description: Updates a book based on the given ID
-      parameters:
-      - description: ID of book
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Adjusted book object
-        in: body
-        name: book
-        required: true
-        schema:
-          type: object
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.Book'
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      summary: Update book
-      tags:
-      - books
-  /api/books:
-    get:
-      description: Get a list of all books in the system
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Book'
-            type: array
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      summary: List all books
-      tags:
-      - books
   /api/change_password:
     post:
       description: Change user password
@@ -310,6 +218,109 @@ paths:
       summary: List users
       tags:
       - users
+  /api/users/{user_id}/book:
+    post:
+      description: Add a book into the database
+      parameters:
+      - description: Book to add
+        in: body
+        name: book
+        required: true
+        schema:
+          type: object
+      - description: ID of user
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Book'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Add book
+      tags:
+      - books
+  /api/users/{user_id}/book/{id}:
+    delete:
+      description: Deletes a book based on the given ID
+      parameters:
+      - description: ID of book
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete book
+      tags:
+      - books
+    patch:
+      description: Updates a book based on the given ID
+      parameters:
+      - description: ID of book
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Adjusted book object
+        in: body
+        name: book
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Book'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update book
+      tags:
+      - books
+  /api/users/{user_id}/books/{id}:
+    get:
+      description: Get a list of all books in the system
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Book'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: List all books
+      tags:
+      - books
   /health:
     get:
       description: Get the health status of the API

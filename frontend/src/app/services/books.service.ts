@@ -17,20 +17,20 @@ export class BookService {
   }
 
   listBooks(): Observable<Book[]> {
-    return this.http.get<Book[]>(`${this.apiUrl}/books`, {
+    return this.http.get<Book[]>(`${this.apiUrl}/users/${this.authService.getUserId()}/books`, {
       headers: this.headers,
     });
   }
 
   addBook(book: Book): Observable<Book> {
-    return this.http.post<Book>(`${this.apiUrl}/book`, book, {
+    return this.http.post<Book>(`${this.apiUrl}/users/${this.authService.getUserId()}/books`, book, {
       headers: this.headers,
     });
   }
 
   markBookAsRead(book: Book): Observable<Book> {
     return this.http.patch<Book>(
-      `${this.apiUrl}/book/${book.id}`,
+      `${this.apiUrl}/users/${this.authService.getUserId()}/books/${book.id}`,
       {
         completed: !book.completed,
       },
@@ -41,7 +41,7 @@ export class BookService {
   }
 
   deleteBook(id: Number): Observable<string> {
-    return this.http.delete<string>(`${this.apiUrl}/book/${id}`, {
+    return this.http.delete<string>(`${this.apiUrl}/users/${this.authService.getUserId()}/books/${id}`, {
       headers: this.headers,
     });
   }

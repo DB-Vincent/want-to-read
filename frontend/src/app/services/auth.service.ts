@@ -64,6 +64,14 @@ export class AuthService {
     return localStorage.getItem('jwt_token');
   }
 
+  getUserId(): number | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.user_id;
+  }
+
   isLoggedIn(): boolean {
     const token = this.getToken();
     if (!token) return false;

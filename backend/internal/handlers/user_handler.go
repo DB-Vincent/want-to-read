@@ -36,16 +36,16 @@ type EditUserRequest struct {
 	IsSuper  bool   `json:"is_super"`
 }
 
-// @Summary		Authenticate user
-// @Description	Authenticate user and return JWT token
-// @Tags		users
-// @Produce		json
-// @Param		login	body		LoginRequest	true	"Login request"
-// @Success		200		{object}	map[string]string
-// @Failure		400		{string}	string
-// @Failure		401		{string}	string
-// @Failure		500		{string}	string
-// @Router		/api/login [post]
+//	@Summary		Authenticate user
+//	@Description	Authenticate user and return JWT token
+//	@Tags			users
+//	@Produce		json
+//	@Param			login	body		LoginRequest	true	"Login request"
+//	@Success		200		{object}	map[string]string
+//	@Failure		400		{string}	string
+//	@Failure		401		{string}	string
+//	@Failure		500		{string}	string
+//	@Router			/api/login [post]
 func (h *UserHandler) Login(c *gin.Context) {
 	var req LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -73,14 +73,14 @@ func (h *UserHandler) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"token": token})
 }
 
-// @Summary		Register user
-// @Description	Register a new user
-// @Tags		users
-// @Produce		json
-// @Param		register	body		LoginRequest	true	"Register request"
-// @Success		200		{object}	map[string]interface{}
-// @Failure		500		{string}	string
-// @Router		/api/register [post]
+//	@Summary		Register user
+//	@Description	Register a new user
+//	@Tags			users
+//	@Produce		json
+//	@Param			register	body		LoginRequest	true	"Register request"
+//	@Success		200			{object}	map[string]interface{}
+//	@Failure		500			{string}	string
+//	@Router			/api/register [post]
 func (h *UserHandler) Register(c *gin.Context) {
 	var req LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -101,13 +101,13 @@ func (h *UserHandler) Register(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"id": user.ID, "username": user.Username})
 }
 
-// @Summary		List users
-// @Description	List all users
-// @Tags		users
-// @Produce		json
-// @Success		200		{array}		models.User
-// @Failure		500		{string}	string
-// @Router		/api/users [get]
+//	@Summary		List users
+//	@Description	List all users
+//	@Tags			users
+//	@Produce		json
+//	@Success		200	{array}		models.User
+//	@Failure		500	{string}	string
+//	@Router			/api/users [get]
 func (h *UserHandler) ListUsers(c *gin.Context) {
 	users, err := h.userService.ListUsers()
 	if err != nil {
@@ -118,16 +118,16 @@ func (h *UserHandler) ListUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, users)
 }
 
-// @Summary		Change password
-// @Description	Change user password
-// @Tags		users
-// @Produce		json
-// @Param		change_password	body		ChangePasswordRequest	true	"Change password request"
-// @Success		200		{object}	map[string]string
-// @Failure		400		{string}	string
-// @Failure		401		{string}	string
-// @Failure		500		{string}	string
-// @Router		/api/change_password [post]
+//	@Summary		Change password
+//	@Description	Change user password
+//	@Tags			users
+//	@Produce		json
+//	@Param			change_password	body		ChangePasswordRequest	true	"Change password request"
+//	@Success		200				{object}	map[string]string
+//	@Failure		400				{string}	string
+//	@Failure		401				{string}	string
+//	@Failure		500				{string}	string
+//	@Router			/api/change_password [post]
 func (h *UserHandler) ChangePassword(c *gin.Context) {
 	var req ChangePasswordRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -175,18 +175,18 @@ func (h *UserHandler) ChangePassword(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Password changed successfully"})
 }
 
-// @Summary		Edit user
-// @Description	Edit user details
-// @Tags		users
-// @Produce		json
-// @Param		id		path		int	true	"User ID"
-// @Param		edit_user	body		EditUserRequest	true	"Edit user request"
-// @Success		200		{object}	map[string]string
-// @Failure		400		{string}	string
-// @Failure		401		{string}	string
-// @Failure		404		{string}	string
-// @Failure		500		{string}	string
-// @Router		/api/user/{id} [patch]
+//	@Summary		Edit user
+//	@Description	Edit user details
+//	@Tags			users
+//	@Produce		json
+//	@Param			id			path		int				true	"User ID"
+//	@Param			edit_user	body		EditUserRequest	true	"Edit user request"
+//	@Success		200			{object}	map[string]string
+//	@Failure		400			{string}	string
+//	@Failure		401			{string}	string
+//	@Failure		404			{string}	string
+//	@Failure		500			{string}	string
+//	@Router			/api/user/{id} [patch]
 func (h *UserHandler) EditUser(c *gin.Context) {
 	var req EditUserRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
