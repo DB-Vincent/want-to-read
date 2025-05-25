@@ -88,6 +88,26 @@ func (h *BookHandler) AddBook(c *gin.Context) {
 		return
 	}
 
+	token := c.GetHeader("Authorization")
+	if len(token) > 7 && token[:7] == "Bearer " {
+		token = token[7:]
+	}
+	actualUserID, err := h.userService.GetUserId(token)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized", "details": err.Error()})
+		return
+	}
+
+	if uint(userID) != actualUserID {
+		// If a user is a super user, they can access other user's books
+		isSuperUser, err := h.userService.IsSuperUser(token)
+
+		if err != nil || !isSuperUser {
+			c.JSON(http.StatusForbidden, gin.H{"error": "You do not have permission to access this user's books"})
+			return
+		}
+	}
+
 	createdBook, err := h.bookService.AddBook(&book, uint(userID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create book", "details": err.Error()})
@@ -176,6 +196,27 @@ func (h *BookHandler) DeleteBook(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid book ID", "details": err.Error()})
 		return
 	}
+
+	token := c.GetHeader("Authorization")
+	if len(token) > 7 && token[:7] == "Bearer " {
+		token = token[7:]
+	}
+	actualUserID, err := h.userService.GetUserId(token)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized", "details": err.Error()})
+		return
+	}
+
+	if uint(userID) != actualUserID {
+		// If a user is a super user, they can access other user's books
+		isSuperUser, err := h.userService.IsSuperUser(token)
+
+		if err != nil || !isSuperUser {
+			c.JSON(http.StatusForbidden, gin.H{"error": "You do not have permission to access this user's books"})
+			return
+		}
+	}
+
 	deletedID, err := h.bookService.DeleteBook(id, uint(userID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete book", "details": err.Error()})
