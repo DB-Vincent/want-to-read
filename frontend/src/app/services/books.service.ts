@@ -16,8 +16,15 @@ export class BookService {
     this.headers = { Authorization: `Bearer ${this.authService.getToken()}` };
   }
 
-  listBooks(): Observable<Book[]> {
-    return this.http.get<Book[]>(`${this.apiUrl}/users/${this.authService.getUserId()}/books`, {
+  listBooks(userId?: number | null): Observable<Book[]> {
+    let actualUserId
+
+    if (!userId)
+      actualUserId = this.authService.getUserId()
+    else
+      actualUserId = userId
+
+    return this.http.get<Book[]>(`${this.apiUrl}/users/${actualUserId}/books`, {
       headers: this.headers,
     });
   }

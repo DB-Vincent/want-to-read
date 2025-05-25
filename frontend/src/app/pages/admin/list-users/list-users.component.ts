@@ -3,6 +3,7 @@ import { AdminNavbarComponent } from '../../../components/admin-navbar/admin-nav
 import { AuthService } from '../../../services/auth.service';
 import { User } from '../../../../types/user';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-list-users',
   imports: [AdminNavbarComponent, CommonModule],
@@ -11,9 +12,9 @@ import { CommonModule } from '@angular/common';
 })
 export class ListUsersComponent implements OnInit {
   users: User[] = [];
-  errorMessage: string = "";
+  errorMessage: string = '';
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
     this.listUsers();
@@ -26,7 +27,6 @@ export class ListUsersComponent implements OnInit {
       },
       (error) => {
         console.error('Error fetching users:', error);
-        // Handle error, show a message to the user, etc.
       }
     );
   }
@@ -36,12 +36,16 @@ export class ListUsersComponent implements OnInit {
 
     this.authService.updateUser(updatedUser).subscribe(
       () => {
-        this.listUsers()
+        this.listUsers();
       },
       (error) => {
         this.errorMessage = error.error.error;
       }
     );
     console.log('Making user a superuser:', user.id);
+  }
+
+  navigateToUsersBooks(userId: number | undefined) {
+    this.router.navigate(['/admin/list-books/', userId]);
   }
 }
