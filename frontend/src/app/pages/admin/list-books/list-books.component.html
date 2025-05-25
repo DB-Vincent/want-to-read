@@ -1,3 +1,7 @@
 <h2 class="text-xl font-bold mb-4">User's Books</h2>
 
-<app-book-list [books]="books"></app-book-list>
+<app-book-list
+  [books]="books"
+  [removeDeleteBtn]="true"
+  (markAsRead)="onMarkAsRead($event)"
+></app-book-list>

@@ -10,6 +10,8 @@ import { Book } from '../../../types/book';
 })
 export class BookListComponent {
   @Input() books: Book[] = [];
+  @Input() removeDeleteBtn: boolean = false;
+  @Input() removeReadBtn: boolean = false;
   @Output() delete = new EventEmitter<Book>();
   @Output() markAsRead = new EventEmitter<Book>();
 

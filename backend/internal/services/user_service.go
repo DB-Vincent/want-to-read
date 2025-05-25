@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"log"
 	"time"
 
 	"github.com/DB-Vincent/want-to-read/internal/database"
@@ -119,4 +120,39 @@ func (s *UserService) ParseJWT(tokenStr string) (*jwt.Token, error) {
 		}
 		return jwtKey, nil
 	})
+}
+
+func (s *UserService) GetUserId(token string) (uint, error) {
+	parsedToken, err := s.ParseJWT(token)
+	if err != nil {
+		return 0, err
+	}
+	if claims, ok := parsedToken.Claims.(jwt.MapClaims); ok && parsedToken.Valid {
+		if userId, ok := claims["user_id"].(float64); ok {
+			log.Print("User id: ", userId)
+
+			return uint(userId), nil
+		}
+		return 0, errors.New("user_id not found in token claims")
+	}
+	return 0, errors.New("invalid token claims")
+}
+
+func (s *UserService) IsSuperUser(token string) (bool, error) {
+	parsedToken, err := s.ParseJWT(token)
+	if err != nil {
+		return false, err
+	}
+
+	if claims, ok := parsedToken.Claims.(jwt.MapClaims); ok && parsedToken.Valid {
+		if isSuper, ok := claims["is_super"].(bool); ok {
+			log.Print("User is super: ", isSuper)
+
+			return bool(isSuper), nil
+		}
+
+		return false, errors.New("is_super not found in token claims")
+	}
+
+	return false, errors.New("invalid token claims")
 }

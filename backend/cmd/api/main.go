@@ -48,7 +48,7 @@ func main() {
 
 	// Initialize handlers
 	healthHandler := handlers.NewHealthHandler(healthService)
-	bookHandler := handlers.NewBookHandler(bookService)
+	bookHandler := handlers.NewBookHandler(bookService, userService)
 	userHandler := handlers.NewUserHandler(userService)
 
 	// Health check endpoint

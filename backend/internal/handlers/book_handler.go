@@ -11,11 +11,13 @@ import (
 
 type BookHandler struct {
 	bookService *services.BookService
+	userService *services.UserService
 }
 
-func NewBookHandler(bookService *services.BookService) *BookHandler {
+func NewBookHandler(bookService *services.BookService, userService *services.UserService) *BookHandler {
 	return &BookHandler{
 		bookService: bookService,
+		userService: userService,
 	}
 }
 
@@ -34,6 +36,27 @@ func (h *BookHandler) ListBooks(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing or invalid user_id", "details": err.Error()})
 		return
 	}
+
+	token := c.GetHeader("Authorization")
+	if len(token) > 7 && token[:7] == "Bearer " {
+		token = token[7:]
+	}
+	actualUserID, err := h.userService.GetUserId(token)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized", "details": err.Error()})
+		return
+	}
+
+	if uint(userID) != actualUserID {
+		// If a user is a super user, they can access other user's books
+		isSuperUser, err := h.userService.IsSuperUser(token)
+
+		if err != nil || !isSuperUser {
+			c.JSON(http.StatusForbidden, gin.H{"error": "You do not have permission to access this user's books"})
+			return
+		}
+	}
+
 	books, err := h.bookService.ListBooks(uint(userID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch books", "details": err.Error()})
@@ -91,16 +114,39 @@ func (h *BookHandler) UpdateBook(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing or invalid user_id", "details": err.Error()})
 		return
 	}
+
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid book ID", "details": err.Error()})
 		return
 	}
+
 	var updateData map[string]interface{}
 	if err := c.ShouldBindJSON(&updateData); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body", "details": err.Error()})
 		return
 	}
+
+	token := c.GetHeader("Authorization")
+	if len(token) > 7 && token[:7] == "Bearer " {
+		token = token[7:]
+	}
+	actualUserID, err := h.userService.GetUserId(token)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized", "details": err.Error()})
+		return
+	}
+
+	if uint(userID) != actualUserID {
+		// If a user is a super user, they can access other user's books
+		isSuperUser, err := h.userService.IsSuperUser(token)
+
+		if err != nil || !isSuperUser {
+			c.JSON(http.StatusForbidden, gin.H{"error": "You do not have permission to access this user's books"})
+			return
+		}
+	}
+
 	updatedBook, err := h.bookService.UpdateBook(id, uint(userID), updateData)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update book", "details": err.Error()})
