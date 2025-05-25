@@ -16,21 +16,28 @@ export class BookService {
     this.headers = { Authorization: `Bearer ${this.authService.getToken()}` };
   }
 
-  listBooks(): Observable<Book[]> {
-    return this.http.get<Book[]>(`${this.apiUrl}/books`, {
+  listBooks(userId?: number | null): Observable<Book[]> {
+    let actualUserId
+
+    if (!userId)
+      actualUserId = this.authService.getUserId()
+    else
+      actualUserId = userId
+
+    return this.http.get<Book[]>(`${this.apiUrl}/users/${actualUserId}/books`, {
       headers: this.headers,
     });
   }
 
   addBook(book: Book): Observable<Book> {
-    return this.http.post<Book>(`${this.apiUrl}/book`, book, {
+    return this.http.post<Book>(`${this.apiUrl}/users/${this.authService.getUserId()}/books`, book, {
       headers: this.headers,
     });
   }
 
   markBookAsRead(book: Book): Observable<Book> {
     return this.http.patch<Book>(
-      `${this.apiUrl}/book/${book.id}`,
+      `${this.apiUrl}/users/${this.authService.getUserId()}/books/${book.id}`,
       {
         completed: !book.completed,
       },
@@ -41,7 +48,7 @@ export class BookService {
   }
 
   deleteBook(id: Number): Observable<string> {
-    return this.http.delete<string>(`${this.apiUrl}/book/${id}`, {
+    return this.http.delete<string>(`${this.apiUrl}/users/${this.authService.getUserId()}/books/${id}`, {
       headers: this.headers,
     });
   }

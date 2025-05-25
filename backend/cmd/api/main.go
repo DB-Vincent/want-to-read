@@ -48,7 +48,7 @@ func main() {
 
 	// Initialize handlers
 	healthHandler := handlers.NewHealthHandler(healthService)
-	bookHandler := handlers.NewBookHandler(bookService)
+	bookHandler := handlers.NewBookHandler(bookService, userService)
 	userHandler := handlers.NewUserHandler(userService)
 
 	// Health check endpoint
@@ -67,37 +67,10 @@ func main() {
 
 	apiRoutes.Use(userHandler.AuthMiddleware())
 	{
-		// Books endpoints
-		apiRoutes.GET("/books", func(c *gin.Context) {
-			books, err := bookService.ListBooks()
-			if err != nil {
-				c.JSON(500, gin.H{
-					"error": "Failed to fetch books",
-				})
-				return
-			}
-			c.JSON(200, books)
-		})
-		apiRoutes.POST("/book", func(c *gin.Context) {
-			var book models.Book
-			if err := c.ShouldBindJSON(&book); err != nil {
-				c.JSON(400, gin.H{
-					"error": "Invalid request body",
-				})
-				return
-			}
-
-			createdBook, err := bookService.AddBook(&book)
-			if err != nil {
-				c.JSON(500, gin.H{
-					"error": "Failed to add book",
-				})
-				return
-			}
-			c.JSON(200, createdBook)
-		})
-		apiRoutes.PATCH("/book/:id", bookHandler.UpdateBook)
-		apiRoutes.DELETE("/book/:id", bookHandler.DeleteBook)
+		apiRoutes.GET("/users/:user_id/books", bookHandler.ListBooks)         // List books for a specific user
+		apiRoutes.POST("/users/:user_id/books", bookHandler.AddBook)          // Add book for a specific user
+		apiRoutes.PATCH("/users/:user_id/books/:id", bookHandler.UpdateBook)  // Update a user's book
+		apiRoutes.DELETE("/users/:user_id/books/:id", bookHandler.DeleteBook) // Delete a user's book
 	}
 
 	// Swagger documentation endpoint
