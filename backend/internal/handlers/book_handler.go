@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
@@ -167,6 +168,7 @@ func (h *BookHandler) UpdateBook(c *gin.Context) {
 		}
 	}
 
+	log.Printf("Updating book %d for user %d with %#v", id, userID, updateData)
 	updatedBook, err := h.bookService.UpdateBook(id, uint(userID), updateData)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update book", "details": err.Error()})

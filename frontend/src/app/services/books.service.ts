@@ -37,7 +37,7 @@ export class BookService {
 
   markBookAsRead(book: Book): Observable<Book> {
     return this.http.patch<Book>(
-      `${this.apiUrl}/users/${this.authService.getUserId()}/books/${book.id}`,
+      `${this.apiUrl}/users/${book.user_id}/books/${book.id}`,
       {
         completed: !book.completed,
       },
